@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Maquettes — Souq العقاد</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;700&family=Playfair+Display:wght@700&display=swap');
+  :root{
+    --navy:#0D1B2A; --teal:#00C9A7; --teal2:#00A88C; --gold:#C9A227; --goldf:#F5D78A;
+    --white:#FFFFFF; --offwhite:#F8F9FC; --gray:#E8ECF0; --text:#1A1A2E;
+    --red:#E5534B; --blue:#1A5CBB; --green:#228B22;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#1a1a2e;font-family:'Tajawal',sans-serif;color:var(--text);}
+  header{background:var(--navy);padding:24px 40px;border-bottom:3px solid var(--teal);
+    display:flex;align-items:center;gap:20px;}
+  header h1{font-family:'Playfair Display',serif;font-size:28px;color:white;}
+  header span{color:var(--teal);font-size:22px;}
+  header p{color:#aaa;font-size:14px;margin-top:4px;}
+  .nav{background:#111827;padding:0 40px;display:flex;gap:4px;border-bottom:2px solid #333;flex-wrap:wrap;}
+  .nav button{background:none;border:none;color:#aaa;padding:14px 20px;cursor:pointer;
+    font-size:14px;font-family:'Tajawal',sans-serif;border-bottom:3px solid transparent;transition:.2s;}
+  .nav button.active,.nav button:hover{color:var(--teal);border-bottom-color:var(--teal);}
+  .page{display:none;padding:40px;gap:40px;}
+  .page.active{display:flex;flex-direction:column;}
+  .page-title{color:white;font-family:'Playfair Display',serif;font-size:22px;
+    border-left:4px solid var(--teal);padding-left:16px;margin-bottom:8px;}
+  .page-sub{color:#aaa;font-size:14px;margin-bottom:30px;padding-left:20px;}
+  .screens-row{display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap;}
+  .screen-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;}
+  .screen-label{color:var(--gold);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+  .screen-note{color:#aaa;font-size:12px;text-align:center;max-width:260px;}
+
+  /* ========= PHONE SHELL ========= */
+  .phone{width:270px;background:#111;border-radius:40px;padding:10px;
+    box-shadow:0 0 0 2px #333, 0 20px 60px rgba(0,0,0,.6);position:relative;}
+  .phone::before{content:'';position:absolute;top:18px;left:50%;transform:translateX(-50%);
+    width:60px;height:5px;background:#333;border-radius:3px;}
+  .phone-screen{border-radius:32px;overflow:hidden;height:520px;position:relative;}
+
+  /* ========= SHARED COMPONENTS ========= */
+  .topbar-std{background:var(--navy);padding:18px 16px 14px;display:flex;align-items:center;justify-content:space-between;}
+  .topbar-back{background:var(--navy);padding:16px;display:flex;align-items:center;gap:10px;}
+  .back-btn{color:var(--teal);font-size:18px;cursor:pointer;}
+  .topbar-back h2{color:white;font-size:14px;font-weight:700;}
+  .avatar-circle{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .notif-btn{width:34px;height:34px;border-radius:50%;background:#1a2d42;
+    display:flex;align-items:center;justify-content:center;font-size:16px;position:relative;}
+  .notif-dot{position:absolute;top:2px;right:2px;width:8px;height:8px;background:var(--red);border-radius:50%;}
+  .greeting-txt{color:white;font-size:13px;}
+  .greeting-txt small{color:#aaa;font-size:10px;display:block;}
+  .screen-content{padding:12px;flex:1;overflow:hidden;display:flex;flex-direction:column;gap:10px;}
+  .section-title{font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.04em;}
+  .badge{font-size:9px;padding:2px 7px;border-radius:8px;font-weight:700;}
+  .badge-blue{background:#deeeff;color:#1A5CBB;}
+  .badge-orange{background:#fff3cd;color:#a06000;}
+  .badge-green{background:#d4edda;color:#155724;}
+  .badge-red{background:#fde8e8;color:#c0392b;}
+  .badge-gray{background:#f0f0f0;color:#555;}
+  .toggle{width:44px;height:24px;background:var(--teal);border-radius:12px;position:relative;flex-shrink:0;}
+  .toggle::after{content:'';position:absolute;right:3px;top:3px;width:18px;height:18px;
+    background:white;border-radius:50%;}
+  .toggle-off{width:44px;height:24px;background:#ccc;border-radius:12px;position:relative;flex-shrink:0;}
+  .toggle-off::after{content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;
+    background:white;border-radius:50%;}
+  .bottom-nav{background:white;border-top:1px solid #eee;display:flex;
+    justify-content:space-around;padding:8px 0 10px;}
+  .bottom-nav .ni{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;}
+  .bottom-nav .ni .icon{font-size:18px;}
+  .bottom-nav .ni .label{font-size:9px;color:#aaa;}
+  .bottom-nav .ni.active .label{color:var(--teal);}
+  .bottom-nav .ni.active .icon-bg{background:rgba(0,201,167,.1);border-radius:8px;padding:2px 8px;}
+  .card-white{background:white;border-radius:12px;padding:10px 12px;
+    box-shadow:0 1px 4px rgba(0,0,0,.06);}
+  .card-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+  .card-name{font-size:12px;font-weight:700;color:var(--navy);}
+  .card-sub{font-size:10px;color:#888;}
+  .teal-btn{background:linear-gradient(90deg,var(--teal),var(--teal2));
+    color:white;padding:13px;border-radius:14px;font-size:13px;font-weight:700;
+    text-align:center;cursor:pointer;box-shadow:0 4px 15px rgba(0,201,167,.3);}
+  .outline-btn{background:transparent;border:2px solid var(--teal);
+    color:var(--teal);padding:11px;border-radius:14px;font-size:13px;
+    font-weight:700;text-align:center;cursor:pointer;}
+  .field{display:flex;flex-direction:column;gap:4px;}
+  .field label{font-size:10px;color:#888;font-weight:700;text-transform:uppercase;}
+  .field .inp{background:white;border:1.5px solid #ddd;border-radius:10px;padding:8px 10px;
+    font-size:12px;color:var(--navy);display:flex;justify-content:space-between;align-items:center;}
+  .field .inp.focused{border-color:var(--teal);}
+  .stat-bar{display:flex;justify-content:space-around;background:white;padding:12px;border-bottom:1px solid #eee;}
+  .stat-item{text-align:center;}
+  .stat-item .sv{font-size:18px;font-weight:700;}
+  .stat-item .sl{font-size:10px;color:#888;}
+
+  /* ========= SCREEN 1: ACCUEIL ========= */
+  .s1{background:linear-gradient(160deg,#0D1B2A 0%,#0a2440 60%,#0D1B2A 100%);
+    display:flex;flex-direction:column;align-items:center;padding:30px 18px 18px;height:100%;}
+  .s1 .pattern{position:absolute;top:0;left:0;right:0;bottom:0;opacity:.04;
+    background-image:repeating-linear-gradient(45deg,#00C9A7 0,#00C9A7 1px,transparent 0,transparent 50%);
+    background-size:20px 20px;pointer-events:none;}
+  .s1 .logo-area{text-align:center;margin:20px 0 30px;position:relative;z-index:1;}
+  .s1 .logo-circle{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--gold));
+    display:flex;align-items:center;justify-content:center;margin:0 auto 12px;
+    box-shadow:0 0 30px rgba(0,201,167,.3);}
+  .s1 .logo-icon{font-size:34px;}
+  .s1 .app-name{font-family:'Amiri',serif;font-size:28px;color:white;font-weight:700;}
+  .s1 .app-name span{color:var(--teal);}
+  .s1 .tagline{color:#aaa;font-size:11px;margin-top:4px;}
+  .s1 .who-label{color:#aaa;font-size:11px;margin-bottom:10px;position:relative;z-index:1;}
+  .s1 .who-btns{display:flex;gap:8px;margin-bottom:28px;position:relative;z-index:1;}
+  .who-btn{background:#1a2d42;border:1.5px solid #2a4060;border-radius:14px;
+    padding:8px 12px;text-align:center;cursor:pointer;transition:.2s;min-width:72px;}
+  .who-btn.sel{border-color:var(--teal);background:rgba(0,201,167,.1);}
+  .who-btn .ico{font-size:22px;display:block;margin-bottom:4px;}
+  .who-btn .lbl{font-size:10px;color:#ccc;display:block;}
+  .s1 .divider{height:1px;background:linear-gradient(90deg,transparent,#2a4060,transparent);
+    width:80%;margin:0 auto 20px;position:relative;z-index:1;}
+  .s1 .btn-connect{background:linear-gradient(90deg,var(--teal),var(--teal2));
+    border:none;color:white;width:100%;padding:14px;border-radius:14px;
+    font-size:14px;font-weight:700;font-family:'Tajawal',sans-serif;cursor:pointer;
+    margin-bottom:10px;position:relative;z-index:1;box-shadow:0 4px 15px rgba(0,201,167,.3);}
+  .s1 .btn-signup{background:transparent;border:2px solid var(--teal);
+    color:var(--teal);width:100%;padding:12px;border-radius:14px;
+    font-size:14px;font-family:'Tajawal',sans-serif;cursor:pointer;position:relative;z-index:1;}
+  .s1 .bottom-link{color:#555;font-size:10px;margin-top:auto;position:relative;z-index:1;}
+
+  /* ========= ARTISANE SCREENS ========= */
+  .s-art{background:var(--offwhite);display:flex;flex-direction:column;height:100%;}
+  .status-card{background:linear-gradient(135deg,#0D1B2A,#1a3050);border-radius:16px;
+    padding:12px 14px;display:flex;justify-content:space-between;align-items:center;}
+  .status-card .sl{color:white;font-size:12px;}
+  .status-card .sl small{color:#aaa;font-size:10px;}
+  .cmd-card{background:white;border-radius:12px;padding:10px 12px;border-left:3px solid var(--teal);
+    box-shadow:0 1px 4px rgba(0,0,0,.06);}
+  .cmd-card .ct{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+  .cmd-card .cn{font-size:12px;font-weight:700;color:var(--navy);}
+  .cmd-card .cs{font-size:10px;color:#888;}
+  .fil-alert{background:linear-gradient(90deg,#fff9e6,#fffbf0);border-radius:12px;
+    padding:10px 12px;border:1.5px solid var(--gold);display:flex;align-items:center;gap:10px;}
+  .fil-alert .fi{font-size:22px;}
+  .fil-alert .ft{font-size:11px;color:var(--navy);}
+  .fil-alert .ft small{color:#a06000;display:block;font-size:10px;}
+  /* profil artisane */
+  .art-hero{background:linear-gradient(180deg,var(--navy) 0%,#1a3050 100%);
+    padding:20px 16px 24px;text-align:center;}
+  .art-hero .av{width:70px;height:70px;border-radius:50%;margin:0 auto 10px;
+    background:linear-gradient(135deg,var(--gold),#f5d78a);
+    display:flex;align-items:center;justify-content:center;font-size:36px;
+    border:3px solid var(--teal);}
+  .art-hero .name{color:white;font-size:15px;font-weight:700;}
+  .art-hero .loc{color:#aaa;font-size:11px;margin-top:2px;}
+  .art-hero .stars{color:var(--gold);font-size:14px;margin-top:4px;}
+  .tags-row{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap;}
+  .tag{background:rgba(0,201,167,.15);color:var(--teal);padding:3px 10px;
+    border-radius:20px;font-size:10px;border:1px solid rgba(0,201,167,.3);}
+  .avail-row{display:flex;justify-content:space-between;align-items:center;
+    background:white;border-radius:12px;padding:12px;border:1.5px solid #eee;}
+  .avail-dot{width:10px;height:10px;border-radius:50%;background:var(--teal);display:inline-block;margin-right:6px;}
+  /* recu */
+  .recu-summary{background:linear-gradient(135deg,var(--teal),var(--teal2));
+    margin:12px;border-radius:16px;padding:16px;color:white;text-align:center;}
+  .recu-summary .amount{font-size:32px;font-weight:700;}
+  .recu-summary .lbl{font-size:12px;opacity:.8;margin-top:4px;}
+  .receipt{background:white;margin:0 12px;border-radius:16px;padding:14px;
+    box-shadow:0 2px 12px rgba(0,0,0,.06);}
+  .receipt-row{display:flex;justify-content:space-between;padding:6px 0;
+    border-bottom:1px solid #f0f0f0;font-size:12px;}
+  .receipt-row:last-child{border:none;}
+  .receipt-row .key{color:#888;}
+  .receipt-row .val{color:var(--navy);font-weight:600;}
+  .status-pill{background:#d4edda;color:#155724;padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700;}
+  .dl-btn{background:white;margin:12px;border-radius:14px;padding:12px;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    border:2px solid var(--teal);color:var(--teal);font-weight:700;font-size:13px;cursor:pointer;}
+  /* commande form */
+  .qty-ctrl{display:flex;align-items:center;gap:8px;}
+  .qty-ctrl .qbtn{width:28px;height:28px;border-radius:8px;background:var(--teal);
+    color:white;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .qty-ctrl .qval{font-size:14px;font-weight:700;color:var(--navy);}
+  .artisane-suggest{background:white;border-radius:12px;padding:10px;
+    border:1.5px solid #eee;display:flex;gap:10px;align-items:center;}
+  .artisane-suggest .av{width:40px;height:40px;border-radius:50%;
+    background:linear-gradient(135deg,var(--gold),#e8c55a);
+    display:flex;align-items:center;justify-content:center;font-size:20px;}
+  .artisane-suggest .info{flex:1;}
+  .artisane-suggest .name{font-size:12px;font-weight:700;color:var(--navy);}
+  .artisane-suggest .stars{color:var(--gold);font-size:10px;}
+  .artisane-suggest .cap{font-size:10px;color:#888;}
+
+  /* ========= COMMERÇANT SCREENS ========= */
+  .s-comm{background:var(--offwhite);display:flex;flex-direction:column;height:100%;}
+  .comm-stat{background:linear-gradient(135deg,#0D1B2A,#1a3050);border-radius:16px;
+    padding:14px;display:flex;justify-content:space-around;}
+  .comm-stat .cs{text-align:center;}
+  .comm-stat .cv{font-size:22px;font-weight:700;color:var(--teal);}
+  .comm-stat .cl{font-size:10px;color:#aaa;}
+  .artisane-card{background:white;border-radius:12px;padding:10px;
+    border:1.5px solid #eee;display:flex;gap:10px;align-items:center;
+    box-shadow:0 1px 4px rgba(0,0,0,.06);}
+  .artisane-card .ava{width:44px;height:44px;border-radius:50%;
+    background:linear-gradient(135deg,var(--gold),#f5d78a);
+    display:flex;align-items:center;justify-content:center;font-size:22px;}
+  .artisane-card .inf{flex:1;}
+  .artisane-card .nm{font-size:12px;font-weight:700;color:var(--navy);}
+  .artisane-card .sr{color:var(--gold);font-size:10px;}
+  .artisane-card .cp{font-size:10px;color:#888;}
+  .artisane-card .avail-badge{background:rgba(0,201,167,.12);color:var(--teal);
+    font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;}
+  .order-track{background:white;border-radius:12px;padding:12px;
+    box-shadow:0 1px 4px rgba(0,0,0,.06);}
+  .order-track .ot-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .order-track .ot-id{font-size:12px;font-weight:700;color:var(--navy);}
+  .progress-bar{background:#eee;border-radius:8px;height:6px;margin:8px 0;}
+  .progress-fill{background:linear-gradient(90deg,var(--teal),var(--teal2));height:6px;border-radius:8px;}
+  .progress-steps{display:flex;justify-content:space-between;margin-top:6px;}
+  .progress-steps span{font-size:9px;color:#aaa;}
+  .progress-steps span.done{color:var(--teal);font-weight:700;}
+
+  /* ========= FOURNISSEUR SCREENS ========= */
+  .s-four{background:var(--offwhite);display:flex;flex-direction:column;height:100%;}
+  .four-hero{background:linear-gradient(135deg,#0D1B2A,#1a3050);
+    padding:14px;border-radius:16px;display:flex;justify-content:space-between;align-items:center;}
+  .four-hero .fh-l .fh-title{font-size:13px;font-weight:700;color:white;}
+  .four-hero .fh-l .fh-sub{font-size:10px;color:#aaa;margin-top:2px;}
+  .four-hero .fh-num{font-size:28px;font-weight:700;color:var(--teal);}
+  .four-hero .fh-lbl{font-size:10px;color:#aaa;text-align:right;}
+  .stock-card{background:white;border-radius:12px;padding:10px 12px;
+    border-left:3px solid var(--green);box-shadow:0 1px 4px rgba(0,0,0,.06);}
+  .stock-card.low{border-left-color:var(--gold);}
+  .stock-card.out{border-left-color:var(--red);opacity:.7;}
+  .stock-card .sc-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+  .stock-card .sc-name{font-size:12px;font-weight:700;color:var(--navy);}
+  .stock-card .sc-info{font-size:10px;color:#888;}
+  .stock-bar{background:#eee;border-radius:4px;height:4px;margin-top:6px;}
+  .stock-bar-fill{background:var(--green);height:4px;border-radius:4px;}
+  .stock-bar-fill.low{background:var(--gold);}
+  .annonce-form{background:white;border-radius:14px;padding:12px;
+    box-shadow:0 1px 8px rgba(0,0,0,.06);}
+  .annonce-form .af-title{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:10px;
+    padding-bottom:8px;border-bottom:1px solid #eee;}
+  .color-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;}
+  .color-chip{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid transparent;}
+  .color-chip.sel{border-color:var(--teal);}
+  .horaire-row{display:flex;gap:6px;}
+  .horaire-pill{background:#eee;border-radius:8px;padding:4px 10px;font-size:10px;
+    color:#555;cursor:pointer;}
+  .horaire-pill.sel{background:rgba(0,201,167,.15);color:var(--teal);
+    border:1px solid rgba(0,201,167,.4);}
+  .distrib-card{background:linear-gradient(90deg,#fff9e6,#fffbf0);border-radius:12px;
+    padding:10px 12px;border:1.5px solid var(--gold);}
+  .distrib-card .dc-title{font-size:11px;font-weight:700;color:#a06000;margin-bottom:6px;}
+  .distrib-card .dc-row{display:flex;justify-content:space-between;font-size:11px;
+    color:var(--navy);margin-bottom:3px;}
+
+  /* ========= ADMINISTRATEUR SCREENS ========= */
+  .s-adm{background:var(--offwhite);display:flex;flex-direction:column;height:100%;}
+  .adm-kpi{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .kpi-card{background:white;border-radius:12px;padding:10px;text-align:center;
+    box-shadow:0 1px 4px rgba(0,0,0,.06);}
+  .kpi-card .kv{font-size:22px;font-weight:700;}
+  .kpi-card .kl{font-size:10px;color:#888;margin-top:2px;}
+  .user-row{background:white;border-radius:10px;padding:8px 10px;
+    display:flex;align-items:center;gap:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+  .user-row .ur-av{width:34px;height:34px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .user-row .ur-info{flex:1;}
+  .user-row .ur-name{font-size:11px;font-weight:700;color:var(--navy);}
+  .user-row .ur-type{font-size:10px;color:#888;}
+  .user-row .ur-actions{display:flex;gap:4px;}
+  .btn-ok{background:#d4edda;color:#155724;border:none;border-radius:6px;
+    padding:4px 8px;font-size:10px;font-weight:700;cursor:pointer;}
+  .btn-ko{background:#fde8e8;color:#c0392b;border:none;border-radius:6px;
+    padding:4px 8px;font-size:10px;font-weight:700;cursor:pointer;}
+  .chart-bar-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+  .chart-bar-row .cb-lbl{font-size:10px;color:#888;width:50px;text-align:right;flex-shrink:0;}
+  .chart-bar-row .cb-bar{flex:1;background:#eee;border-radius:4px;height:8px;}
+  .chart-bar-row .cb-fill{background:linear-gradient(90deg,var(--teal),var(--teal2));
+    height:8px;border-radius:4px;}
+  .chart-bar-row .cb-val{font-size:10px;font-weight:700;color:var(--teal);width:30px;}
+  .alert-item{background:white;border-radius:10px;padding:8px 10px;
+    display:flex;align-items:center;gap:8px;border-left:3px solid var(--red);
+    box-shadow:0 1px 3px rgba(0,0,0,.05);}
+  .alert-item .ai-ico{font-size:18px;}
+  .alert-item .ai-txt{font-size:11px;color:var(--navy);}
+  .alert-item .ai-txt small{color:#888;display:block;font-size:10px;}
+
+  /* ========= CHARTE ========= */
+  .charte-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .charte-card{background:#111827;border-radius:16px;padding:20px;}
+  .charte-card h3{color:var(--teal);font-size:14px;font-weight:700;margin-bottom:14px;
+    border-bottom:1px solid #222;padding-bottom:8px;}
+  .color-swatch{display:flex;gap:8px;margin-bottom:10px;align-items:center;}
+  .swatch{width:36px;height:36px;border-radius:8px;flex-shrink:0;}
+  .swatch-info .name{color:white;font-size:12px;font-weight:600;}
+  .swatch-info .hex{color:#888;font-size:11px;}
+  .font-sample{margin-bottom:12px;}
+  .font-sample .fname{color:#888;font-size:10px;margin-bottom:4px;}
+  .font-sample .fsample{font-size:20px;color:white;}
+  .spec-row{display:flex;justify-content:space-between;margin-bottom:8px;}
+  .spec-row .key{color:#888;font-size:12px;}
+  .spec-row .val{color:white;font-size:12px;font-weight:600;}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🧵 Souq العقاد — <span>Maquettes</span></h1>
+    <p>Dossier de conception · Design des interfaces · Application PWA · Sefrou 2025–2026</p>
+  </div>
+</header>
+
+<nav class="nav">
+  <button class="active" onclick="show('ecrans')">📱 Écran commun</button>
+  <button onclick="show('artisane')">👩‍🎨 Artisane</button>
+  <button onclick="show('commercant')">🏪 Commerçant</button>
+  <button onclick="show('fournisseur')">📦 Fournisseur</button>
+  <button onclick="show('admin')">🔐 Administrateur</button>
+  <button onclick="show('charte')">🎨 Charte graphique</button>
+</nav>
+
+<!-- ============================================================ -->
+<!-- PAGE: ÉCRAN COMMUN (ACCUEIL)                                  -->
+<!-- ============================================================ -->
+<div id="ecrans" class="page active">
+  <div>
+    <div class="page-title">Écran partagé — Accueil & Connexion</div>
+    <div class="page-sub">Cet écran est le premier que voit n'importe quel utilisateur. Il sélectionne son type de compte avant de se connecter.</div>
+  </div>
+  <div class="screens-row">
+    <div class="screen-wrap">
+      <div class="screen-label">Écran 00 — Accueil</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s1">
+            <div class="pattern"></div>
+            <div class="logo-area">
+              <div class="logo-circle"><div class="logo-icon">🧵</div></div>
+              <div class="app-name">Souq <span>العقاد</span></div>
+              <div class="tagline">سفرو · Sefrou · ⵙⴼⵔⵓ</div>
+            </div>
+            <div class="who-label">Qui êtes-vous ?</div>
+            <div class="who-btns">
+              <div class="who-btn sel"><span class="ico">👩‍🎨</span><span class="lbl">Artisane</span></div>
+              <div class="who-btn"><span class="ico">🏪</span><span class="lbl">Commerçant</span></div>
+              <div class="who-btn"><span class="ico">📦</span><span class="lbl">Fournisseur</span></div>
+            </div>
+            <div class="divider"></div>
+            <button class="btn-connect">Se connecter →</button>
+            <button class="btn-signup">Créer un compte</button>
+            <div class="bottom-link" style="margin-top:18px">Inscription sous réserve de validation</div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Commun à tous</div>
+      <div class="screen-note">L'utilisateur sélectionne son type de compte. L'interface s'adapte ensuite à son rôle.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: ARTISANE (5 écrans existants)                          -->
+<!-- ============================================================ -->
+<div id="artisane" class="page">
+  <div>
+    <div class="page-title">👩‍🎨 Maquettes — Artisane</div>
+    <div class="page-sub">5 écrans couvrant le tableau de bord, les commandes, le profil et les paiements de l'artisane.</div>
+  </div>
+  <div class="screens-row">
+
+    <!-- Écran A1: Dashboard artisane -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran A1</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-art">
+            <div class="topbar-std">
+              <div class="avatar-circle" style="background:linear-gradient(135deg,var(--teal),var(--gold))">👩</div>
+              <div class="greeting-txt">Bonjour, Fatima <small>Artisane · Sefrou</small></div>
+              <div class="notif-btn">🔔<div class="notif-dot"></div></div>
+            </div>
+            <div class="screen-content">
+              <div class="status-card">
+                <div class="sl"><div style="font-size:14px;font-weight:700">Ma disponibilité</div><small>Vous acceptez des commandes</small></div>
+                <div class="toggle"></div>
+              </div>
+              <div class="section-title">Commandes en cours</div>
+              <div class="cmd-card">
+                <div class="ct"><span class="cn">CMD-2025-041</span><span class="badge badge-blue">En cours</span></div>
+                <div class="cs">Type A · 24 pièces · Délai : 15 juin</div>
+              </div>
+              <div class="cmd-card">
+                <div class="ct"><span class="cn">CMD-2025-038</span><span class="badge badge-orange">En attente</span></div>
+                <div class="cs">Type B · 12 pièces · Délai : 20 juin</div>
+              </div>
+              <div class="section-title">🔔 Alerte stock</div>
+              <div class="fil-alert">
+                <div class="fi">🧶</div>
+                <div class="ft">Fil argenté disponible<small>Lundi 9h–12h · Derb Sefrou</small></div>
+              </div>
+            </div>
+            <div class="bottom-nav">
+              <div class="ni active"><div class="icon-bg"><div class="icon">🏠</div></div><div class="label">Accueil</div></div>
+              <div class="ni"><div class="icon">📋</div><div class="label">Commandes</div></div>
+              <div class="ni"><div class="icon">🧶</div><div class="label">Fil</div></div>
+              <div class="ni"><div class="icon">💰</div><div class="label">Paiements</div></div>
+              <div class="ni"><div class="icon">👤</div><div class="label">Profil</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Tableau de bord</div>
+      <div class="screen-note">Vue principale. Disponibilité, commandes actives et alertes fil.</div>
+    </div>
+
+    <!-- Écran A2: Accepter commande -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran A2</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-art">
+            <div class="topbar-back">
+              <span class="back-btn">←</span>
+              <h2>Détail commande</h2>
+            </div>
+            <div class="screen-content">
+              <div style="background:linear-gradient(135deg,#0D1B2A,#1a3050);border-radius:14px;padding:14px;color:white;">
+                <div style="font-size:11px;color:#aaa;margin-bottom:4px">Référence</div>
+                <div style="font-size:16px;font-weight:700">CMD-2025-041</div>
+                <div style="font-size:11px;color:var(--teal);margin-top:6px">🏪 Boutique El Andalous · Sefrou</div>
+              </div>
+              <div class="card-white">
+                <div style="font-size:10px;color:#888;margin-bottom:8px;font-weight:700;text-transform:uppercase">Détails de la commande</div>
+                <div class="card-row"><span class="card-sub">Type العقاد</span><span style="font-size:12px;font-weight:700;color:var(--navy)">Doré traditionnel</span></div>
+                <div class="card-row"><span class="card-sub">Quantité</span><span style="font-size:12px;font-weight:700;color:var(--navy)">24 pièces</span></div>
+                <div class="card-row"><span class="card-sub">Délai</span><span style="font-size:12px;font-weight:700;color:var(--navy)">15 juin 2025</span></div>
+                <div class="card-row"><span class="card-sub">Prix/pièce</span><span style="font-size:12px;font-weight:700;color:var(--teal)">8,50 DH</span></div>
+                <div style="border-top:1px solid #eee;margin-top:8px;padding-top:8px;display:flex;justify-content:space-between;">
+                  <span style="font-size:12px;font-weight:700;color:#888">Total estimé</span>
+                  <span style="font-size:14px;font-weight:700;color:var(--navy)">204 DH</span>
+                </div>
+              </div>
+              <div class="teal-btn" style="margin-top:auto">✓ Accepter la commande</div>
+              <div class="outline-btn">✗ Refuser</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Accepter / Refuser</div>
+      <div class="screen-note">L'artisane consulte les détails et accepte ou refuse la commande.</div>
+    </div>
+
+    <!-- Écran A3: Profil artisane -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran A3</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-art">
+            <div class="art-hero">
+              <div class="av" style="width:70px;height:70px;border-radius:50%;margin:0 auto 10px;background:linear-gradient(135deg,var(--gold),#f5d78a);display:flex;align-items:center;justify-content:center;font-size:36px;border:3px solid var(--teal)">👩‍🎨</div>
+              <div class="name">Khadija Benali</div>
+              <div class="loc">📍 Derb El Miter, Sefrou</div>
+              <div class="stars">★★★★★ 4.8 (32 avis)</div>
+              <div class="tags-row">
+                <span class="tag">عقاد ذهبي</span>
+                <span class="tag">عقاد فضي</span>
+                <span class="tag">عقاد ملون</span>
+              </div>
+            </div>
+            <div class="stat-bar">
+              <div class="stat-item"><div class="sv" style="color:var(--teal)">47</div><div class="sl">Commandes</div></div>
+              <div class="stat-item"><div class="sv" style="color:var(--gold)">25</div><div class="sl">Pièces/sem</div></div>
+              <div class="stat-item"><div class="sv" style="color:var(--green)">98%</div><div class="sl">Livraisons OK</div></div>
+            </div>
+            <div style="padding:12px;display:flex;flex-direction:column;gap:8px;">
+              <div class="section-title">Disponibilité</div>
+              <div class="avail-row">
+                <div><span class="avail-dot"></span><span style="font-size:13px;font-weight:600;color:var(--navy)">Disponible</span></div>
+                <div class="toggle"></div>
+              </div>
+              <div class="card-white">
+                <div style="font-size:10px;color:#888;margin-bottom:6px;font-weight:700;text-transform:uppercase">Prochain fil</div>
+                <div style="font-size:12px;color:var(--navy)">🧶 Lundi 9h–12h · Fil argenté</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Mon profil</div>
+      <div class="screen-note">Profil public de l'artisane, visible par les commerçants.</div>
+    </div>
+
+    <!-- Écran A4: Passer une commande (vue artisane) -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran A4</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-art">
+            <div class="topbar-back">
+              <span class="back-btn">←</span>
+              <h2>Mes paiements</h2>
+            </div>
+            <div class="screen-content">
+              <div class="recu-summary">
+                <div class="amount">204 <span style="font-size:16px">DH</span></div>
+                <div class="lbl">CMD-2025-041 · 24 pièces</div>
+              </div>
+              <div class="receipt">
+                <div class="receipt-row"><span class="key">Artisane</span><span class="val">Fatima El Mansouri</span></div>
+                <div class="receipt-row"><span class="key">Type</span><span class="val">العقاد الذهبي</span></div>
+                <div class="receipt-row"><span class="key">Quantité</span><span class="val">24 pièces</span></div>
+                <div class="receipt-row"><span class="key">Prix unitaire</span><span class="val">8,50 DH</span></div>
+                <div class="receipt-row"><span class="key">Date</span><span class="val">12 juin 2025</span></div>
+                <div class="receipt-row"><span class="key">Mode</span><span class="val">Virement</span></div>
+                <div class="receipt-row"><span class="key">Statut</span><span class="val"><span class="status-pill">✓ Payé</span></span></div>
+              </div>
+              <div class="dl-btn">⬇ Télécharger le reçu PDF</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Reçu de paiement</div>
+      <div class="screen-note">Reçu numérique automatique téléchargeable en PDF.</div>
+    </div>
+
+    <!-- Écran A5: Avancement commande -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran A5</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-art">
+            <div class="topbar-back">
+              <span class="back-btn">←</span>
+              <h2>Avancement</h2>
+            </div>
+            <div class="screen-content">
+              <div class="card-white">
+                <div class="card-row"><span class="cn" style="font-size:13px">CMD-2025-041</span><span class="badge badge-blue">En cours</span></div>
+                <div class="card-sub" style="margin-top:4px">Doré · 24 pièces · 15 juin</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+                <div class="progress-steps">
+                  <span class="done">✓ Acceptée</span>
+                  <span class="done">✓ Démarrée</span>
+                  <span style="color:var(--teal);font-weight:700">● En cours</span>
+                  <span>Prête</span>
+                  <span>Livrée</span>
+                </div>
+              </div>
+              <div class="section-title">Mettre à jour le statut</div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="background:#E6FAF7;border:1.5px solid var(--teal);border-radius:10px;padding:10px;display:flex;align-items:center;gap:8px;">
+                  <span style="font-size:18px">🔵</span>
+                  <span style="font-size:12px;font-weight:700;color:var(--navy)">En cours de fabrication</span>
+                  <span style="margin-left:auto;font-size:16px;color:var(--teal)">●</span>
+                </div>
+                <div style="background:white;border:1.5px solid #eee;border-radius:10px;padding:10px;display:flex;align-items:center;gap:8px;">
+                  <span style="font-size:18px">📦</span>
+                  <span style="font-size:12px;color:#888">Prête à livrer</span>
+                </div>
+                <div style="background:white;border:1.5px solid #eee;border-radius:10px;padding:10px;display:flex;align-items:center;gap:8px;">
+                  <span style="font-size:18px">✅</span>
+                  <span style="font-size:12px;color:#888">Livrée</span>
+                </div>
+              </div>
+              <div class="teal-btn" style="margin-top:auto">Confirmer la mise à jour</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Avancement commande</div>
+      <div class="screen-note">L'artisane met à jour le statut de sa commande en temps réel.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: COMMERÇANT (5 écrans)                                  -->
+<!-- ============================================================ -->
+<div id="commercant" class="page">
+  <div>
+    <div class="page-title">🏪 Maquettes — Commerçant</div>
+    <div class="page-sub">5 écrans couvrant le tableau de bord, la recherche d'artisanes, la passation de commande, et le suivi.</div>
+  </div>
+  <div class="screens-row">
+
+    <!-- Écran C1: Dashboard commerçant -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran C1</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-comm">
+            <div class="topbar-std">
+              <div class="avatar-circle" style="background:linear-gradient(135deg,var(--blue),#3a7ddd)">🏪</div>
+              <div class="greeting-txt">Bonjour, Hassan <small>Commerçant · Sefrou</small></div>
+              <div class="notif-btn">🔔<div class="notif-dot"></div></div>
+            </div>
+            <div class="screen-content">
+              <div class="comm-stat">
+                <div class="cs"><div class="cv">8</div><div class="cl">Commandes actives</div></div>
+                <div class="cs"><div class="cv" style="color:var(--gold)">3</div><div class="cl">En attente</div></div>
+                <div class="cs"><div class="cv" style="color:var(--green)">42</div><div class="cl">Terminées</div></div>
+              </div>
+              <div class="section-title">Commandes récentes</div>
+              <div class="cmd-card" style="border-left-color:var(--blue)">
+                <div class="ct"><span class="cn">CMD-2025-041</span><span class="badge badge-blue">En cours</span></div>
+                <div class="cs">Fatima El Mansouri · 24 pièces · 15 juin</div>
+              </div>
+              <div class="cmd-card" style="border-left-color:var(--green)">
+                <div class="ct"><span class="cn">CMD-2025-039</span><span class="badge badge-green">Prête !</span></div>
+                <div class="cs">Khadija Benali · 18 pièces · 10 juin</div>
+              </div>
+              <div class="cmd-card" style="border-left-color:var(--gold)">
+                <div class="ct"><span class="cn">CMD-2025-037</span><span class="badge badge-orange">En attente</span></div>
+                <div class="cs">Non attribuée · 30 pièces · 25 juin</div>
+              </div>
+            </div>
+            <div class="bottom-nav">
+              <div class="ni active"><div class="icon-bg"><div class="icon">🏠</div></div><div class="label">Accueil</div></div>
+              <div class="ni"><div class="icon">➕</div><div class="label">Commander</div></div>
+              <div class="ni"><div class="icon">📋</div><div class="label">Suivi</div></div>
+              <div class="ni"><div class="icon">💰</div><div class="label">Paiements</div></div>
+              <div class="ni"><div class="icon">👤</div><div class="label">Profil</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Tableau de bord</div>
+      <div class="screen-note">Vue principale. Statistiques, commandes actives et alertes.</div>
+    </div>
+
+    <!-- Écran C2: Chercher artisane -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran C2</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-comm">
+            <div class="topbar-back">
+              <span class="back-btn">←</span>
+              <h2>Choisir une artisane</h2>
+            </div>
+            <div class="screen-content">
+              <div style="background:white;border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:8px;border:1.5px solid var(--teal);">
+                <span>🔍</span>
+                <span style="font-size:12px;color:#aaa">Rechercher par nom ou quartier…</span>
+              </div>
+              <div style="display:flex;gap:6px;">
+                <span class="horaire-pill sel">Toutes</span>
+                <span class="horaire-pill">Disponibles</span>
+                <span class="horaire-pill">Doré</span>
+                <span class="horaire-pill">Argenté</span>
+              </div>
+              <div class="artisane-card">
+                <div class="ava">👩</div>
+                <div class="inf">
+                  <div class="nm">Fatima El Mansouri</div>
+                  <div class="sr">★★★★★ 4.9</div>
+                  <div class="cp">30 pièces/sem · Derb Sefrou</div>
+                </div>
+                <div class="avail-badge">Dispo</div>
+              </div>
+              <div class="artisane-card">
+                <div class="ava">👩‍🎨</div>
+                <div class="inf">
+                  <div class="nm">Khadija Benali</div>
+                  <div class="sr">★★★★★ 4.8</div>
+                  <div class="cp">25 pièces/sem · Quartier Jdid</div>
+                </div>
+                <div class="avail-badge">Dispo</div>
+              </div>
+              <div class="artisane-card" style="opacity:.5">
+                <div class="ava">👩</div>
+                <div class="inf">
+                  <div class="nm">Amina Oujri</div>
+                  <div class="sr">★★★★☆ 4.3</div>
+                  <div class="cp">20 pièces/sem · Bab Sidi Bou Jida</div>
+                </div>
+                <div style="background:#fde8e8;color:#c0392b;font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;">Occupée</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Recherche artisane</div>
+      <div class="screen-note">Le commerçant filtre et sélectionne une artisane disponible.</div>
+    </div>
+
+    <!-- Écran C3: Nouvelle commande -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran C3</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-comm">
+            <div class="topbar-back">
+              <span class="back-btn">←</span>
+              <h2>Nouvelle commande</h2>
+            </div>
+            <div class="screen-content">
+              <div class="field">
+                <label>Type de العقاد</label>
+                <div class="inp focused">Type traditionnel doré ▾</div>
+              </div>
+              <div class="field">
+                <label>Quantité (pièces)</label>
+                <div class="inp">
+                  <div class="qty-ctrl">
+                    <div class="qbtn">−</div>
+                    <div class="qval">24</div>
+                    <div class="qbtn">+</div>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Date de livraison</label>
+                <div class="inp">📅 15 juin 2025</div>
+              </div>
+              <div class="field">
+                <label>Prix proposé (DH/pièce)</label>
+                <div class="inp">8,50 DH</div>
+              </div>
+              <div class="section-title" style="color:#666">Artisane sélectionnée</div>
+              <div class="artisane-suggest">
+                <div class="av">👩</div>
+                <div class="info">
+                  <div class="name">Fatima El Mansouri</div>
+                  <div class="stars">★★★★★ <span style="color:#888;font-size:10px">4.9</span></div>
+                  <div class="cap">Capacité : 30 pièces/sem · Disponible</div>
+                </div>
+              </div>
+              <div class="teal-btn">✓ Envoyer la commande</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Passer une commande</div>
+      <div class="screen-note">Formulaire complet avec l'artisane déjà choisie à l'écran précédent.</div>
+    </div>
+
+    <!-- Écran C4: Suivi commande -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran C4</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-comm">
+            <div class="topbar-back">
+              <span class="back-btn">←</span>
+              <h2>Suivi commande</h2>
+            </div>
+            <div class="screen-content">
+              <div class="order-track">
+                <div class="ot-head">
+                  <span class="ot-id">CMD-2025-041</span>
+                  <span class="badge badge-blue">En cours</span>
+                </div>
+                <div style="font-size:10px;color:#888;margin-bottom:8px">Fatima El Mansouri · Doré · 24 pièces</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+                <div class="progress-steps">
+                  <span class="done">✓ Envoyée</span>
+                  <span class="done">✓ Acceptée</span>
+                  <span style="color:var(--teal);font-weight:700">● Cours</span>
+                  <span>Prête</span>
+                  <span>Livrée</span>
+                </div>
+              </div>
+              <div class="card-white">
+                <div style="font-size:10px;color:#888;margin-bottom:8px;font-weight:700;text-transform:uppercase">Artisane</div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#f5d78a);display:flex;align-items:center;justify-content:center;font-size:18px">👩</div>
+                  <div>
+                    <div style="font-size:12px;font-weight:700;color:var(--navy)">Fatima El Mansouri</div>
+                    <div style="font-size:10px;color:var(--teal)">★★★★★ 4.9 · Derb Sefrou</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-white">
+                <div style="font-size:10px;color:#888;margin-bottom:6px;font-weight:700;text-transform:uppercase">Délai estimé</div>
+                <div style="font-size:14px;font-weight:700;color:var(--navy)">📅 15 juin 2025</div>
+                <div style="font-size:10px;color:var(--green);margin-top:2px">✓ Dans les délais</div>
+              </div>
+              <div class="teal-btn">✓ Confirmer réception</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Suivi en temps réel</div>
+      <div class="screen-note">Le commerçant voit l'avancement et confirme la réception.</div>
+    </div>
+
+    <!-- Écran C5: Paiement commerçant -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran C5</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-comm">
+            <div class="topbar-back">
+              <span class="back-btn">←</span>
+              <h2>Effectuer le paiement</h2>
+            </div>
+            <div class="screen-content">
+              <div class="recu-summary">
+                <div class="amount">204 <span style="font-size:16px">DH</span></div>
+                <div class="lbl">CMD-2025-041 · 24 pièces</div>
+              </div>
+              <div class="receipt">
+                <div class="receipt-row"><span class="key">Artisane</span><span class="val">Fatima El Mansouri</span></div>
+                <div class="receipt-row"><span class="key">Type</span><span class="val">العقاد الذهبي</span></div>
+                <div class="receipt-row"><span class="key">Quantité</span><span class="val">24 pièces</span></div>
+                <div class="receipt-row"><span class="key">Prix unitaire</span><span class="val">8,50 DH</span></div>
+                <div class="receipt-row"><span class="key">Total</span><span class="val" style="color:var(--navy);font-size:14px;font-weight:700">204 DH</span></div>
+              </div>
+              <div class="section-title">Mode de paiement</div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="background:#E6FAF7;border:1.5px solid var(--teal);border-radius:10px;padding:10px;display:flex;align-items:center;gap:8px;">
+                  <span style="font-size:18px">💳</span>
+                  <span style="font-size:12px;font-weight:700;color:var(--navy)">Virement bancaire</span>
+                  <span style="margin-left:auto;color:var(--teal)">●</span>
+                </div>
+                <div style="background:white;border:1.5px solid #eee;border-radius:10px;padding:10px;display:flex;align-items:center;gap:8px;">
+                  <span style="font-size:18px">💵</span>
+                  <span style="font-size:12px;color:#888">Espèces</span>
+                </div>
+                <div style="background:white;border:1.5px solid #eee;border-radius:10px;padding:10px;display:flex;align-items:center;gap:8px;">
+                  <span style="font-size:18px">📱</span>
+                  <span style="font-size:12px;color:#888">Mobile Pay</span>
+                </div>
+              </div>
+              <div class="teal-btn">✓ Confirmer le paiement</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Paiement</div>
+      <div class="screen-note">Choix du mode de paiement. Un reçu PDF est généré automatiquement.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: FOURNISSEUR (4 écrans)                                 -->
+<!-- ============================================================ -->
+<div id="fournisseur" class="page">
+  <div>
+    <div class="page-title">📦 Maquettes — Fournisseur de fil</div>
+    <div class="page-sub">4 écrans couvrant le tableau de bord, la gestion des stocks, et la publication d'annonces de fil.</div>
+  </div>
+  <div class="screens-row">
+
+    <!-- Écran F1: Dashboard fournisseur -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran F1</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-four">
+            <div class="topbar-std">
+              <div class="avatar-circle" style="background:linear-gradient(135deg,var(--green),#4caf50)">📦</div>
+              <div class="greeting-txt">Bonjour, Youssef <small>Fournisseur · Sefrou</small></div>
+              <div class="notif-btn">🔔</div>
+            </div>
+            <div class="screen-content">
+              <div class="four-hero">
+                <div class="fh-l">
+                  <div class="fh-title">Stocks actifs</div>
+                  <div class="fh-sub">Mis à jour aujourd'hui</div>
+                </div>
+                <div>
+                  <div class="fh-num">6</div>
+                  <div class="fh-lbl">Annonces</div>
+                </div>
+              </div>
+              <div class="section-title">Mes stocks</div>
+              <div class="stock-card">
+                <div class="sc-row"><span class="sc-name">🧶 Fil argenté</span><span class="badge badge-green">Disponible</span></div>
+                <div class="sc-info">150 bobines · Lundi 9h–12h</div>
+                <div class="stock-bar"><div class="stock-bar-fill" style="width:75%"></div></div>
+              </div>
+              <div class="stock-card low">
+                <div class="sc-row"><span class="sc-name">🧶 Fil doré</span><span class="badge badge-orange">Stock faible</span></div>
+                <div class="sc-info">30 bobines · Mercredi 10h–13h</div>
+                <div class="stock-bar"><div class="stock-bar-fill low" style="width:20%"></div></div>
+              </div>
+              <div class="stock-card out">
+                <div class="sc-row"><span class="sc-name">🧶 Fil rouge</span><span class="badge badge-red">Épuisé</span></div>
+                <div class="sc-info">0 bobine · Prochaine livraison : 20 juin</div>
+                <div class="stock-bar"><div class="stock-bar-fill" style="width:0%"></div></div>
+              </div>
+            </div>
+            <div class="bottom-nav">
+              <div class="ni active"><div class="icon-bg"><div class="icon">🏠</div></div><div class="label">Accueil</div></div>
+              <div class="ni"><div class="icon">➕</div><div class="label">Publier</div></div>
+              <div class="ni"><div class="icon">📊</div><div class="label">Stocks</div></div>
+              <div class="ni"><div class="icon">👤</div><div class="label">Profil</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Tableau de bord</div>
+      <div class="screen-note">Vue principale. Résumé des stocks actifs et alertes de niveau bas.</div>
+    </div>
+
+    <!-- Écran F2: Publier annonce -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran F2</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-four">
+            <div class="topbar-back">
+              <span class="back-btn">←</span>
+              <h2>Publier une annonce</h2>
+            </div>
+            <div class="screen-content">
+              <div class="annonce-form">
+                <div class="af-title">📋 Informations du fil</div>
+                <div class="field" style="margin-bottom:8px">
+                  <label>Type de fil</label>
+                  <div class="inp focused">Fil argenté ▾</div>
+                </div>
+                <div class="field" style="margin-bottom:8px">
+                  <label>Couleur</label>
+                  <div class="color-chips">
+                    <div class="color-chip sel" style="background:#C0C0C0" title="Argenté"></div>
+                    <div class="color-chip" style="background:#FFD700" title="Doré"></div>
+                    <div class="color-chip" style="background:#FF6B6B" title="Rouge"></div>
+                    <div class="color-chip" style="background:#4A90D9" title="Bleu"></div>
+                    <div class="color-chip" style="background:#2ECC71" title="Vert"></div>
+                    <div class="color-chip" style="background:#8E44AD" title="Violet"></div>
+                  </div>
+                </div>
+                <div class="field" style="margin-bottom:8px">
+                  <label>Quantité (bobines)</label>
+                  <div class="inp">
+                    <div class="qty-ctrl">
+                      <div class="qbtn">−</div>
+                      <div class="qval">150</div>
+                      <div class="qbtn">+</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="section-title">Créneau de distribution</div>
+              <div class="horaire-row">
+                <span class="horaire-pill sel">Lundi</span>
+                <span class="horaire-pill">Mardi</span>
+                <span class="horaire-pill">Mercredi</span>
+                <span class="horaire-pill">Jeudi</span>
+              </div>
+              <div class="horaire-row">
+                <span class="horaire-pill sel">9h–12h</span>
+                <span class="horaire-pill">14h–17h</span>
+                <span class="horaire-pill">8h–10h</span>
+              </div>
+              <div class="teal-btn">📢 Publier l'annonce</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Publier une annonce</div>
+      <div class="screen-note">Le fournisseur déclare un stock disponible avec quantité, couleur et créneau horaire.</div>
+    </div>
+
+    <!-- Écran F3: Planning distribution -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran F3</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-four">
+            <div class="topbar-back">
+              <span class="back-btn">←</span>
+              <h2>Planning distribution</h2>
+            </div>
+            <div class="screen-content">
+              <div class="section-title">Cette semaine</div>
+              <div class="distrib-card">
+                <div class="dc-title">📅 Lundi 10 juin · 9h–12h</div>
+                <div class="dc-row"><span>Fil argenté</span><span style="font-weight:700">150 bobines</span></div>
+                <div class="dc-row" style="font-size:10px;color:#aaa"><span>Artisanes notifiées</span><span>23</span></div>
+              </div>
+              <div class="distrib-card" style="background:linear-gradient(90deg,#f0f8ff,#e8f4ff);border-color:#1A5CBB">
+                <div class="dc-title" style="color:#1A5CBB">📅 Mercredi 12 juin · 10h–13h</div>
+                <div class="dc-row"><span>Fil doré</span><span style="font-weight:700">30 bobines</span></div>
+                <div class="dc-row" style="font-size:10px;color:#aaa"><span>Artisanes notifiées</span><span>8</span></div>
+              </div>
+              <div class="section-title">Notifications envoyées</div>
+              <div class="card-white">
+                <div class="card-row">
+                  <span style="font-size:12px;color:var(--navy)">🔔 Fil argenté disponible</span>
+                  <span class="badge badge-green">23 vues</span>
+                </div>
+                <div class="card-sub" style="margin-top:4px">Envoyée le 8 juin · 8h00</div>
+              </div>
+              <div class="card-white">
+                <div class="card-row">
+                  <span style="font-size:12px;color:var(--navy)">🔔 Fil doré — stock limité</span>
+                  <span class="badge badge-orange">8 vues</span>
+                </div>
+                <div class="card-sub" style="margin-top:4px">Envoyée le 8 juin · 8h02</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Planning & Notifications</div>
+      <div class="screen-note">Le fournisseur voit ses créneaux de distribution et combien d'artisanes ont été notifiées.</div>
+    </div>
+
+    <!-- Écran F4: Gestion stock detail -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran F4</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-four">
+            <div class="topbar-back">
+              <span class="back-btn">←</span>
+              <h2>Gérer le stock</h2>
+            </div>
+            <div class="screen-content">
+              <div style="background:linear-gradient(135deg,#0D1B2A,#1a3050);border-radius:14px;padding:14px;text-align:center;">
+                <div style="font-size:11px;color:#aaa;margin-bottom:4px">Fil argenté</div>
+                <div style="font-size:36px;font-weight:700;color:var(--teal)">150</div>
+                <div style="font-size:12px;color:#aaa">bobines disponibles</div>
+                <div class="stock-bar" style="margin:10px 20px 0;"><div class="stock-bar-fill" style="width:75%"></div></div>
+              </div>
+              <div class="section-title">Modifier l'annonce</div>
+              <div class="field">
+                <label>Nouvelle quantité</label>
+                <div class="inp focused">
+                  <div class="qty-ctrl">
+                    <div class="qbtn">−</div>
+                    <div class="qval">150</div>
+                    <div class="qbtn">+</div>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Statut</label>
+                <div class="inp">Disponible ▾</div>
+              </div>
+              <div class="teal-btn">💾 Enregistrer les modifications</div>
+              <div style="background:#fde8e8;color:#c0392b;border-radius:12px;padding:10px;text-align:center;font-size:12px;font-weight:700;cursor:pointer;">
+                🗑 Supprimer cette annonce
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Modifier / Supprimer</div>
+      <div class="screen-note">Le fournisseur modifie ou supprime une annonce de stock existante.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: ADMINISTRATEUR (4 écrans)                             -->
+<!-- ============================================================ -->
+<div id="admin" class="page">
+  <div>
+    <div class="page-title">🔐 Maquettes — Administrateur</div>
+    <div class="page-sub">4 écrans couvrant le tableau de bord d'administration, la validation des comptes, les statistiques et la gestion des alertes.</div>
+  </div>
+  <div class="screens-row">
+
+    <!-- Écran ADM1: Dashboard admin -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran ADM1</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-adm">
+            <div class="topbar-std" style="background:#1a0D2A;">
+              <div class="avatar-circle" style="background:linear-gradient(135deg,#C0006A,#8B004A)">🔐</div>
+              <div class="greeting-txt">Administration <small>Souq العقاد · Sefrou</small></div>
+              <div class="notif-btn">🔔<div class="notif-dot"></div></div>
+            </div>
+            <div class="screen-content">
+              <div class="adm-kpi">
+                <div class="kpi-card"><div class="kv" style="color:var(--teal)">47</div><div class="kl">Artisanes</div></div>
+                <div class="kpi-card"><div class="kv" style="color:var(--blue)">23</div><div class="kl">Commerçants</div></div>
+                <div class="kpi-card"><div class="kv" style="color:var(--green)">8</div><div class="kl">Fournisseurs</div></div>
+                <div class="kpi-card"><div class="kv" style="color:var(--gold)">312</div><div class="kl">Commandes</div></div>
+              </div>
+              <div class="section-title">⚠️ Comptes en attente</div>
+              <div class="user-row">
+                <div class="ur-av" style="background:rgba(0,201,167,.1)">👩</div>
+                <div class="ur-info"><div class="ur-name">Amina Oujri</div><div class="ur-type">Artisane · Quartier Jdid</div></div>
+                <div class="ur-actions"><button class="btn-ok">✓</button><button class="btn-ko">✗</button></div>
+              </div>
+              <div class="user-row">
+                <div class="ur-av" style="background:rgba(26,92,187,.1)">🏪</div>
+                <div class="ur-info"><div class="ur-name">Boutique Andalous</div><div class="ur-type">Commerçant · Centre ville</div></div>
+                <div class="ur-actions"><button class="btn-ok">✓</button><button class="btn-ko">✗</button></div>
+              </div>
+              <div class="section-title">Alertes système</div>
+              <div class="alert-item">
+                <div class="ai-ico">⚠️</div>
+                <div class="ai-txt">Paiement litigieux signalé<small>CMD-2025-035 · il y a 2h</small></div>
+              </div>
+            </div>
+            <div class="bottom-nav">
+              <div class="ni active"><div class="icon-bg"><div class="icon">🏠</div></div><div class="label">Accueil</div></div>
+              <div class="ni"><div class="icon">👥</div><div class="label">Comptes</div></div>
+              <div class="ni"><div class="icon">📊</div><div class="label">Stats</div></div>
+              <div class="ni"><div class="icon">⚠️</div><div class="label">Alertes</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Tableau de bord admin</div>
+      <div class="screen-note">Vue globale : KPIs, comptes en attente de validation et alertes.</div>
+    </div>
+
+    <!-- Écran ADM2: Gestion comptes -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran ADM2</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-adm">
+            <div class="topbar-back" style="background:#1a0D2A;">
+              <span class="back-btn">←</span>
+              <h2>Gestion des comptes</h2>
+            </div>
+            <div class="screen-content">
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <span class="horaire-pill sel">Tous</span>
+                <span class="horaire-pill">Artisanes</span>
+                <span class="horaire-pill">Commerçants</span>
+                <span class="horaire-pill">En attente</span>
+              </div>
+              <div class="user-row">
+                <div class="ur-av" style="background:rgba(0,201,167,.1)">👩</div>
+                <div class="ur-info"><div class="ur-name">Fatima El Mansouri</div><div class="ur-type">Artisane · Actif ✓</div></div>
+                <span class="badge badge-green">Actif</span>
+              </div>
+              <div class="user-row">
+                <div class="ur-av" style="background:rgba(26,92,187,.1)">🏪</div>
+                <div class="ur-info"><div class="ur-name">Boutique El Andalous</div><div class="ur-type">Commerçant · Actif ✓</div></div>
+                <span class="badge badge-green">Actif</span>
+              </div>
+              <div class="user-row" style="border-left:3px solid var(--gold);padding-left:7px;">
+                <div class="ur-av" style="background:rgba(201,162,39,.1)">👩</div>
+                <div class="ur-info"><div class="ur-name">Amina Oujri</div><div class="ur-type">Artisane · En attente</div></div>
+                <div class="ur-actions"><button class="btn-ok">✓</button><button class="btn-ko">✗</button></div>
+              </div>
+              <div class="user-row" style="opacity:.6">
+                <div class="ur-av" style="background:#fde8e8">🏪</div>
+                <div class="ur-info"><div class="ur-name">Souk Bab Guissa</div><div class="ur-type">Commerçant · Suspendu</div></div>
+                <span class="badge badge-red">Suspendu</span>
+              </div>
+              <div class="user-row" style="border-left:3px solid var(--gold);padding-left:7px;">
+                <div class="ur-av" style="background:rgba(26,92,187,.1)">🏪</div>
+                <div class="ur-info"><div class="ur-name">Boutique Andalous</div><div class="ur-type">Commerçant · En attente</div></div>
+                <div class="ur-actions"><button class="btn-ok">✓</button><button class="btn-ko">✗</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Liste des comptes</div>
+      <div class="screen-note">L'admin valide, suspend ou supprime les comptes utilisateurs.</div>
+    </div>
+
+    <!-- Écran ADM3: Statistiques -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran ADM3</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-adm">
+            <div class="topbar-back" style="background:#1a0D2A;">
+              <span class="back-btn">←</span>
+              <h2>Statistiques</h2>
+            </div>
+            <div class="screen-content">
+              <div style="background:linear-gradient(135deg,#0D1B2A,#1a3050);border-radius:14px;padding:12px;">
+                <div style="font-size:11px;color:#aaa;margin-bottom:8px;font-weight:700;text-transform:uppercase">Commandes ce mois</div>
+                <div style="font-size:30px;font-weight:700;color:var(--teal)">312</div>
+                <div style="font-size:11px;color:var(--green);margin-top:4px">↑ +18% vs mois précédent</div>
+              </div>
+              <div class="section-title">Par type de العقاد</div>
+              <div class="chart-bar-row"><div class="cb-lbl">Doré</div><div class="cb-bar"><div class="cb-fill" style="width:80%"></div></div><div class="cb-val">124</div></div>
+              <div class="chart-bar-row"><div class="cb-lbl">Argenté</div><div class="cb-bar"><div class="cb-fill" style="width:60%"></div></div><div class="cb-val">98</div></div>
+              <div class="chart-bar-row"><div class="cb-lbl">Coloré</div><div class="cb-bar"><div class="cb-fill" style="width:40%"></div></div><div class="cb-val">62</div></div>
+              <div class="chart-bar-row"><div class="cb-lbl">Mixte</div><div class="cb-bar"><div class="cb-fill" style="width:18%"></div></div><div class="cb-val">28</div></div>
+              <div class="section-title">Paiements</div>
+              <div style="display:flex;gap:8px;">
+                <div class="kpi-card" style="flex:1"><div class="kv" style="color:var(--green);font-size:16px">89%</div><div class="kl">Payés</div></div>
+                <div class="kpi-card" style="flex:1"><div class="kv" style="color:var(--gold);font-size:16px">8%</div><div class="kl">Partiels</div></div>
+                <div class="kpi-card" style="flex:1"><div class="kv" style="color:var(--red);font-size:16px">3%</div><div class="kl">En retard</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Statistiques globales</div>
+      <div class="screen-note">L'admin visualise les données de la plateforme : commandes, types et paiements.</div>
+    </div>
+
+    <!-- Écran ADM4: Gestion alertes/litiges -->
+    <div class="screen-wrap">
+      <div class="screen-label">Écran ADM4</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="s-adm">
+            <div class="topbar-back" style="background:#1a0D2A;">
+              <span class="back-btn">←</span>
+              <h2>Alertes & Litiges</h2>
+            </div>
+            <div class="screen-content">
+              <div style="background:linear-gradient(135deg,#2D0D0D,#3D1010);border-radius:14px;padding:12px;display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:white;">Litiges ouverts</div>
+                  <div style="font-size:10px;color:#aaa;margin-top:2px">Nécessitent votre attention</div>
+                </div>
+                <div style="font-size:32px;font-weight:700;color:var(--red)">3</div>
+              </div>
+              <div class="section-title">Signalements actifs</div>
+              <div class="alert-item">
+                <div class="ai-ico">💰</div>
+                <div class="ai-txt">Paiement litigieux signalé<small>CMD-2025-035 · Boutique Andalous</small></div>
+              </div>
+              <div class="alert-item">
+                <div class="ai-ico">📦</div>
+                <div class="ai-txt">Commande non livrée à temps<small>CMD-2025-031 · il y a 3 jours</small></div>
+              </div>
+              <div class="alert-item">
+                <div class="ai-ico">👤</div>
+                <div class="ai-txt">Compte signalé pour abus<small>Souk Bab Guissa · il y a 1 jour</small></div>
+              </div>
+              <div class="section-title">Résolutions récentes</div>
+              <div class="card-white">
+                <div class="card-row"><span style="font-size:11px;color:var(--navy)">✅ Litige CMD-2025-028 résolu</span></div>
+                <div class="card-sub">Paiement confirmé · 9 juin 2025</div>
+              </div>
+              <div class="teal-btn" style="margin-top:auto">Gérer le premier litige →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label" style="color:#aaa">Alertes & Litiges</div>
+      <div class="screen-note">L'admin gère les signalements, litiges et comptes abusifs de la plateforme.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: CHARTE GRAPHIQUE (inchangée)                          -->
+<!-- ============================================================ -->
+<div id="charte" class="page">
+  <div>
+    <div class="page-title">Charte graphique — Identité visuelle</div>
+    <div class="page-sub">Couleurs, typographie et principes de design pour Souq العقاد.</div>
+  </div>
+  <div class="charte-grid">
+    <div class="charte-card">
+      <h3>🎨 Palette de couleurs</h3>
+      <div class="color-swatch"><div class="swatch" style="background:#0D1B2A"></div><div class="swatch-info"><div class="name">Bleu Nuit</div><div class="hex">#0D1B2A · Fond principal · Nuit de Sefrou</div></div></div>
+      <div class="color-swatch"><div class="swatch" style="background:#00C9A7"></div><div class="swatch-info"><div class="name">Turquoise</div><div class="hex">#00C9A7 · Couleur d'action principale</div></div></div>
+      <div class="color-swatch"><div class="swatch" style="background:#C9A227"></div><div class="swatch-info"><div class="name">Or Sefrou</div><div class="hex">#C9A227 · Référence au fil doré du caftan</div></div></div>
+      <div class="color-swatch"><div class="swatch" style="background:#F8F9FC;border:1px solid #ddd"></div><div class="swatch-info"><div class="name">Blanc cassé</div><div class="hex">#F8F9FC · Fond des écrans clairs</div></div></div>
+      <div class="color-swatch"><div class="swatch" style="background:#E5534B"></div><div class="swatch-info"><div class="name">Rouge alerte</div><div class="hex">#E5534B · Erreurs et notifications urgentes</div></div></div>
+    </div>
+    <div class="charte-card">
+      <h3>✍️ Typographie</h3>
+      <div class="font-sample">
+        <div class="fname">Titres arabes — Amiri (serif)</div>
+        <div class="fsample" style="font-family:'Amiri',serif">سوق العقاد — صناعة يدوية</div>
+      </div>
+      <div class="font-sample">
+        <div class="fname">Texte UI — Tajawal (sans-serif)</div>
+        <div class="fsample" style="font-family:'Tajawal',sans-serif;font-size:16px">Gestion des commandes artisanales</div>
+      </div>
+      <div class="font-sample">
+        <div class="fname">Titres français — Playfair Display</div>
+        <div class="fsample" style="font-family:'Playfair Display',serif;font-size:18px">Souq العقاد · Sefrou</div>
+      </div>
+    </div>
+    <div class="charte-card">
+      <h3>📐 Principes de design</h3>
+      <div class="spec-row"><div class="key">Rayon des coins</div><div class="val">10–16px (interface douce)</div></div>
+      <div class="spec-row"><div class="key">Taille boutons</div><div class="val">min 44×44px (mobile)</div></div>
+      <div class="spec-row"><div class="key">Espacement</div><div class="val">Grille de 8px</div></div>
+      <div class="spec-row"><div class="key">Ombres</div><div class="val">Légères, axe Y uniquement</div></div>
+      <div class="spec-row"><div class="key">Icônes</div><div class="val">Emoji + SVG minimalistes</div></div>
+      <div class="spec-row"><div class="key">Langues</div><div class="val">Arabe (RTL) + Français (LTR)</div></div>
+      <div class="spec-row"><div class="key">Thème</div><div class="val">Sombre (navy) + Clair (offwhite)</div></div>
+    </div>
+    <div class="charte-card">
+      <h3>🧩 Composants clés</h3>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="background:#0D1B2A;border-radius:10px;padding:10px 14px;color:white;font-size:13px;font-weight:700;text-align:center;border-left:4px solid #00C9A7">● Bouton principal (Turquoise)</div>
+        <div style="background:transparent;border:2px solid #00C9A7;border-radius:10px;padding:10px 14px;color:#00C9A7;font-size:13px;font-weight:700;text-align:center">○ Bouton secondaire</div>
+        <div style="background:white;border-radius:10px;padding:10px;border-left:3px solid #00C9A7;font-size:12px;color:#0D1B2A;box-shadow:0 2px 8px rgba(0,0,0,.1)">
+          <strong>Carte commande</strong><br><span style="color:#888;font-size:11px">CMD-2025-041 · Type A · 24 pièces</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <span style="background:#d4edda;color:#155724;padding:4px 10px;border-radius:10px;font-size:11px;font-weight:700">✓ Payé</span>
+          <span style="background:#deeeff;color:#1A5CBB;padding:4px 10px;border-radius:10px;font-size:11px;font-weight:700">En cours</span>
+          <span style="background:#fff3cd;color:#a06000;padding:4px 10px;border-radius:10px;font-size:11px;font-weight:700">En attente</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
